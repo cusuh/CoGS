@@ -1,0 +1,7 @@
+@article{ham2022cogs,
+  title={CoGS: Controllable Generation and Search from Sketch and Style},
+  author={Ham, Cusuh and Tarres, Gemma Canet and Bui, Tu and Hays, James and Lin, Zhe and Collomosse, John},
+  journal={European Conference on Computer Vision},
+  year={2022}
+}
+
