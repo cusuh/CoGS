@@ -1,0 +1,94 @@
+model:
+  base_learning_rate: 4.5e-6
+  target: cogs.models.cogs_transformer.Net2NetTransformer
+  params:
+    image_key: image
+    sketch_key: sketch
+    style_key: style
+    label_key: label
+    transformer_config:
+      target: cogs.modules.transformer.mingpt.GPT
+      params:
+        vocab_size: 1024
+        block_size: 1024
+        n_layer: 16 
+        n_head: 16
+        n_embd: 1024
+    image_encoder_config:
+      target: cogs.models.vqgan.VQModel
+      params:
+        ckpt_path: checkpoints/imagenet_vqgan_last.ckpt
+        embed_dim: 256
+        n_embed: 1024
+        ddconfig:
+          double_z: false
+          z_channels: 256
+          resolution: 256
+          in_channels: 3
+          out_ch: 3
+          ch: 128
+          ch_mult:
+          - 1
+          - 1
+          - 2
+          - 2
+          - 4
+          num_res_blocks: 2
+          attn_resolutions:
+          - 16
+          dropout: 0.0
+        lossconfig:
+          target: cogs.modules.losses.DummyLoss
+    sketch_encoder_config:
+      target: cogs.models.vqgan.VQModel
+      params:
+        ckpt_path: checkpoints/pseudosketches_vqgan_last.ckpt
+        embed_dim: 256
+        n_embed: 1024
+        ddconfig:
+          double_z: false
+          z_channels: 256
+          resolution: 256
+          in_channels: 3
+          out_ch: 3
+          ch: 128
+          ch_mult:
+          - 1
+          - 1
+          - 2
+          - 2
+          - 4
+          num_res_blocks: 2
+          attn_resolutions:
+          - 16
+          dropout: 0.0
+        lossconfig:
+          target: cogs.modules.losses.DummyLoss
+    label_encoder_config:
+      target: cogs.modules.util.Labelator
+      params:
+        n_classes: 125
+
+data:
+  target: main.DataModuleFromConfig
+  params:
+    batch_size: 2
+    num_workers: 24
+    train:
+      target: cogs.data.sketch_style_label.SketchTrain
+      params:
+        config:
+          size: 256
+          sketch_path: # /path/to/pseudosketches
+          image_path: # /path/to/corresponding/images
+          style_path: # /path/to/style/images
+          file_list: # /path/to/train/list.txt
+    validation:
+      target: cogs.data.sketch_style_label.SketchValidation
+      params:
+        config:
+          size: 256
+          sketch_path: # /path/to/pseudosketches
+          image_path: # /path/to/corresponding/images
+          style_path: # /path/to/style/images
+          file_list: # /path/to/val/list.txt

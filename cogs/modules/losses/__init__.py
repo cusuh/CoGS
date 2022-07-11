@@ -1,0 +1,1 @@
+from cogs.modules.losses.vqperceptual import DummyLoss

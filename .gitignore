@@ -1,3 +1,9 @@
+checkpoints/
+logs/
+
+cogs/modules/style/aladin_vgg.pt
+cogs/modules/style/resnet_model.pt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
