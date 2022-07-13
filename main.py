@@ -567,7 +567,10 @@ if __name__ == "__main__":
                 melk()
                 raise
         if not opt.no_test and not trainer.interrupted:
-            trainer.test(model, data)
+            dataloader_test = DataLoader(data.datasets['test'], batch_size=data.batch_size,
+                                         num_workers=data.num_workers)
+            trainer.test(model, dataloader_test)
+            #trainer.test(model, data)
     except Exception:
         if opt.debug and trainer.global_rank==0:
             try:

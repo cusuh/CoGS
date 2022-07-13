@@ -1,14 +1,9 @@
-import os
-import sys
 from collections import OrderedDict
-
 import torch
 import torchvision
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.nn.init as init
-from torch.autograd import Variable
-from torch.optim import lr_scheduler
 
 
 class UNet(nn.Module):
@@ -260,7 +255,7 @@ class EmbeddingNet_MUNIT(nn.Module):
         # Network weight initialization
         self.apply(self.weights_init("kaiming"))
 
-    def weights_init self, init_type='gaussian'):
+    def weights_init(self, init_type='gaussian'):
         def init_fun(m):
             classname = m.__class__.__name__
             if (classname.find('Conv') == 0 or classname.find('Linear') == 0) and hasattr(m, 'weight'):
