@@ -362,8 +362,10 @@ class ContrastiveVAE(pl.LightningModule):
 
         prevae = self.transformer.image_encoder_model.decode(z)
 
-        vae_out = self.decode(enc_ae)
-        output_img = self.to_RGB(vae_out)
+        noise = Variable(torch.FloatTensor(x.shape[0], 1024).normal_(0, 1)).to('cuda:0')
+        vae_out = self.decode(torch.cat((enc_ae, noise), dim=1))
+        postvae = self.transformer.image_encoder_model.decode(vae_out)
+        output_img = self.to_RGB(postvae)
         save_image(output_img, f'output/{self.output_name}/vae_img_{batch_idx}.png')
         print(f'Image output/{self.output_name}/vae_img_{batch_idx}.png saved!')
 
