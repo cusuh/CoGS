@@ -1,3 +1,7 @@
+"""
+https://openaccess.thecvf.com/content/ICCV2021/papers/Ruta_ALADIN_All_Layer_Adaptive_Instance_Normalization_for_Fine-Grained_Style_Similarity_ICCV_2021_paper.pdf
+"""
+
 from collections import OrderedDict
 import torch
 import torchvision
@@ -37,7 +41,6 @@ class UNet(nn.Module):
         self.apply(self.weights_init("kaiming"))
 
     def weights_init (self, init_type='gaussian'):
-
         def init_fun(m):
             classname = m.__class__.__name__
             if (classname.find('Conv') == 0 or classname.find('Linear') == 0) and hasattr(m, 'weight'):
@@ -213,6 +216,7 @@ class Flatten(torch.nn.Module):
         batch_size = x.shape[0]
         return x.view(batch_size, -1)
 
+
 # ======= MUNIT classes start
 
 class EmbeddingNet_MUNIT(nn.Module):
@@ -344,6 +348,7 @@ class EmbeddingNet_MUNIT(nn.Module):
         pass
 
 # ======= MUNIT classes end
+
 
 class ResNet50_bam(nn.Module):
     def __init__(self):

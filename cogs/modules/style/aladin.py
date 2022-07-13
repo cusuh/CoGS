@@ -50,7 +50,6 @@ class Flatten(torch.nn.Module):
         return x.view(batch_size, -1)
 
 class AdaIN (torch.nn.Module):
-
     def __init__ (self, hparams):
         super(AdaIN, self).__init__()
 
@@ -76,7 +75,6 @@ class AdaIN (torch.nn.Module):
 
 
 class VGG_Dec(nn.Module):
-
     def __init__ (self, hparams, enc_style):
         super(VGG_Dec, self).__init__()
         self.hparams = hparams
@@ -132,7 +130,6 @@ class VGG_Dec(nn.Module):
                 m.weight = std.contiguous().view(-1)
 
                 params_i += 1
-
 
         del layer_params
 
@@ -298,8 +295,8 @@ class VGG_AdaIN(nn.Module):
         out_size = (i-k+2*p)/s + 1
         return conv(torch.rand(1, channels, dim, dim)).data.view(1, -1).size(1), int(out_size)
 
-class AVGG(nn.Module):
 
+class AVGG(nn.Module):
     def __init__(self, hparams):
         super(AVGG, self).__init__()
 
