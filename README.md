@@ -22,7 +22,7 @@ conda activate cogs
 
 ## Pseudosketches Dataset
 
-Download the [Pseudosketches dataset](). There are train/val input file lists under `data/pseudosketches`, where each line contain a tuple of corresponding inputs:
+Download the [Pseudosketches dataset](https://www.dropbox.com/sh/mfogqa8xlzy6mdk/AABDRO_cLMxTVuRm2RAHHOnza?dl=0). There are train/val input file lists under `data/pseudosketches`, where each line contain a tuple of corresponding inputs:
 ```
 synset_id/sketch.JPEG,synset_id/style.JPEG,synset_id/image.JPEG
 ```
@@ -38,41 +38,42 @@ Train a VQGAN on Pseudosketches with:
 python main.py --base configs/pseudosketches_vqgan.yaml -t True --gpus 0,
 ```
 
-Then, adjust the checkpoint path under `model.params.sketch_encoder_config.params.ckpt_path` in `configs/pseudosketches_cogs_transformer.yaml`. Alternatively, you can download our [pre-trained Pseudosketches VQGAN checkpoint]() and place it into `checkpoints/`, which corresponds to the default checkpoint path in the config file).
+Then, adjust the checkpoint path under `model.params.sketch_encoder_config.params.ckpt_path` in `configs/pseudosketches_cogs_transformer.yaml`. Alternatively, you can download our [pre-trained Pseudosketches VQGAN checkpoint](https://www.dropbox.com/s/rqesaw703ma9x97/pseudosketches_vqgan_last.ckpt?dl=0) and place it under `checkpoints/`, which corresponds to the default checkpoint path in the config file).
 
 ### ImageNet VQGAN
 
-For training a VQGAN on ImageNet, refer to the [taming-transformers](https://github.com/CompVis/taming-transformers) repository. Alternatively, use their [pre-trained ImageNet VQGAN checkpoint](https://k00.fr/u0j2dtac) and place under `checkpoints/` (the default checkpoint path in the config has the filed renamed as `imagenet_vqgan_last.ckpt`). If you trained your own, adjust the checkpoint path under `model.params.image_encoder_config.params.ckpt_path` in
+For training a VQGAN on ImageNet, refer to the [taming-transformers](https://github.com/CompVis/taming-transformers) repository. Alternatively, use their [pre-trained ImageNet VQGAN checkpoint](https://k00.fr/u0j2dtac) and place it under `checkpoints/` (the default checkpoint path in the config has the filed renamed as `imagenet_vqgan_last.ckpt`). If you trained your own, adjust the checkpoint path under `model.params.image_encoder_config.params.ckpt_path` in
 `configs/pseudosketches_cogs_transformer.yaml`.
 
 We use the same ImageNet VQGAN to encode both the style and ground truth images.
 
 ### CoGS Transformer
 
+First, download the [pre-trained ALADIN checkpoints](https://www.dropbox.com/sh/ie58kzsh1cw3w8o/AABC-vhD3hNApJqhncg_HXHCa?dl=0) (`aladin_vgg.pt` and `resnet_model.pt`), and place them under `cogs/modules/style/`. These checkpoints are required to compute the style loss during training.
+
 To train the transformer stage of CoGS, run:
 ```
 python main.py --base configs/pseudosketches_cogs_transformer.yaml -t True --gpus 0,
 ```
 
-We also provide a [pre-trained CoGS transformer checkpoint]().
+We also provide a [pre-trained CoGS transformer checkpoint](https://www.dropbox.com/s/abuozyjbtk64mxv/last.ckpt?dl=0).
 
 ### CoGS VAE
 
-Once the CoGS Transformer, Imagenet VQGAN and Pseudosketches VQGAN have been trained, the VAE can be trained using:
+Adjust the checkpoint paths under `model.params.cogs_transformer_config.params.ckpt_path`, `model.params.cogs_transformer_config.image_encoder_config.params.ckpt_path` and `model.params.cogs_transformer_config.sketch_encoder_config.params.ckpt_path` in `configs/pseudosketches_cogs_vae.yaml`. Then to train the VAE stage of CoGS, run:
 ```
 python main.py --base configs/pseudosketches_cogs_vae.yaml -t True --gpus 0,
 ```
-The checkpoint paths `model.params.cogs_transformer_config.params.ckpt_path`, `model.params.cogs_transformer_config.image_encoder_config.params.ckpt_path` and `model.params.cogs_transformer_config.sketch_encoder_config.params.ckpt_path` in `configs/pseudosketches_cogs_vae.yaml` should be adapted.
 
-In our experiments, the VAE part of our model is trained on a single class, therefore, we provide [pre-trained VAE checkpoints for multiple classes]().
+In our experiments, the VAE is trained on a single class. We provide [pre-trained VAE checkpoints for multiple classes](https://www.dropbox.com/sh/3uazw8z0o9pi5o3/AABB7cDuDoPy2-CciwjkSTska?dl=0).
 
 
 
 ## Sampling
 
-After training a transformer described above or downloading a pre-trained model, you can sample images by running:
+After training a transformer or downloading a pre-trained model, you can sample images by running:
 ```
-python scripts/sample_cogs_transformer.py --resume logs/<experiment_name> --out_dir <path/to/output/directory>
+python scripts/sample_cogs_transformer.py --resume <path/to/ckpt/and/config> --out_dir <path/to/output/directory>
 ```
 
 For including the optional VAE step at the end of the pipeline, you can sample images by running:
@@ -81,7 +82,7 @@ For including the optional VAE step at the end of the pipeline, you can sample i
 python main.py --base configs/pseudosketches_cogs_vae_test.yaml -t False --gpus 0,
 ```
 
-The checkpoint path `model.params.params.ckpt_path` should be adapted to the VAE pre-trained checkpoint path, and the name of the output folder should be given under `model.params.params.output_name` in `configs/pseudosketches_cogs_vae_test.yaml`
+Adjust the checkpoint path under `model.params.params.ckpt_path` to the pre-trained VAE, and the name of the output folder under `model.params.params.output_name` in `configs/pseudosketches_cogs_vae_test.yaml`
 
 
 
