@@ -79,7 +79,7 @@ python scripts/sample_cogs_transformer.py --resume <path/to/ckpt/and/config> --o
 For including the optional VAE step at the end of the pipeline, you can sample images by running:
 
 ```
-python main.py --base configs/pseudosketches_cogs_vae_test.yaml -t False --gpus 0,
+python main.py --base configs/pseudosketches_cogs_vae.yaml -t False --gpus 0,
 ```
 
 Adjust the checkpoint path under `model.params.params.ckpt_path` to the pre-trained VAE, and the name of the output folder under `model.params.params.output_name` in `configs/pseudosketches_cogs_vae_test.yaml`
